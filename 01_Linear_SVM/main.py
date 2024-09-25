@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sklearn
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from Adaline import Adaline
@@ -19,11 +20,13 @@ X_transformed = scaler.fit_transform(X)
 # Entrenam un perceptron
 perceptron = Adaline(eta=0.0005, n_iter=60)
 perceptron.fit(X_transformed, y)
-y_prediction = perceptron.predict(X)
+y_prediction = perceptron.predict(X_transformed)
 
 
 # TODO: Entrenam una SVM linear (classe SVC)
-
+svm = SVC(C=1000.0, kernel= 'linear')
+svm.fit(X_transformed, y, sample_weight=None)
+svm.predict(X_transformed)
 
 # Mostrar resultats
 plt.figure(1)
@@ -37,8 +40,11 @@ plt.axline(xy1=origen, slope=m, c="blue", label="Adaline")
 
 # TODO Mostram els resultats SVM
 
-# plt.axline(xy1= TODO, slope= TODO, c="green", label="SVM")
-# plt.scatter( TODO, facecolors="none", edgecolors="green")
+m = -svm.coef_[0][0]/svm.coef_[0][1]
+origen2 = (0, -svm.intercept_[0]/svm.coef_[0][1])
+
+plt.axline(xy1=origen2, slope=m, c="green", label="SVM")
+plt.scatter(svm.support_vectors_[:,0],svm.support_vectors_[:,1], facecolors="none", edgecolors="green")
 
 
 plt.legend()
